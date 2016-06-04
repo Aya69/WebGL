@@ -7,7 +7,7 @@
 <script type="text/javascript" src="./external-js/glMatrix-0.9.5.min.js"></script>
 <script type="text/javascript" src="./external-js/webgl-utils.js"></script>
 
-
+<!-- Defining our fragment shader GLSL code here. -->
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
     varying vec4 vColor;
@@ -17,6 +17,8 @@
     }
 </script>
 
+
+<!-- Defining our vertex shader GLSL code here. -->
 <script id="shader-vs" type="x-shader/x-vertex">
     attribute vec3 aVertexPosition;
     attribute vec4 aVertexColor;
