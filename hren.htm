@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
 <title>Anya's WebGL 'HREN'</title>
 
-
+<link rel="stylesheet" href="styles/reset.css">
 <script type="text/javascript" src="./external-js/glMatrix-0.9.5.min.js"></script>
 <script type="text/javascript" src="./external-js/webgl-utils.js"></script>
 
@@ -16,7 +16,6 @@
         gl_FragColor = vColor;
     }
 </script>
-
 
 <!-- Defining our vertex shader GLSL code here. -->
 <script id="shader-vs" type="x-shader/x-vertex">
@@ -186,7 +185,7 @@
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colors), gl.STATIC_DRAW);
         squareVertexColorBuffer.itemSize = 4;
         squareVertexColorBuffer.numItems = 4;
-          }
+    }
 
     var lastTime = 0;
     var ticker = 0.0;
@@ -224,29 +223,17 @@
 
 </script>
 
-
 </head>
-
-<style>
-#test {
-  padding: 0;
-   margin: auto;
-   display: block;
-   width: 700px;
-   height: 700px;
-   position: absolute;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   right: 0;
- }
- </style>
 
 <body onload="webGLStart();">
 
-<div id="test">
-    <canvas id="anyas-canvas" style="border: none;" width="700" height="700"></canvas>
-</div>
+<canvas id="anyas-canvas" />
+
+<script>
+    canvas = document.getElementById("anyas-canvas");
+    canvas.width = document.body.clientWidth;
+    canvas.height = document.body.clientHeight;
+</script>
 
 </body>
 </html>
