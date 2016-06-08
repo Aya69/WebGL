@@ -6,13 +6,30 @@
 <link rel="stylesheet" href="styles/reset.css">
 <script type="text/javascript" src="./external-js/glMatrix-0.9.5.min.js"></script>
 <script type="text/javascript" src="./external-js/webgl-utils.js"></script>
+<script type="text/javascript" src="./external-js/jquery-2.2.4.min.js"></script>
 
 <!-- Defining our fragment shader GLSL code here. -->
 <script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
     varying vec4 v_color;
+    uniform vec2 u_mouse_xy;
+    uniform vec2 u_canvas_size;
+
     void main(void) {
-        gl_FragColor = v_color;
+        /*
+        // Every second pixel becomes black.
+
+        vec4 clipspace_mouse_xy = vec4(u_mouse_xy / u_canvas_size, 0, 0.0);
+        gl_FragColor = v_color + clipspace_mouse_xy;
+        vec2 p= vec2(floor(gl_FragCoord.x), floor(gl_FragCoord.y));
+        if (mod(p.y, 2.0)==0.0 && mod(p.x, 2.0)==0.0)
+          gl_FragColor = vec4(0, 0, 0, 1.0);
+        */
+
+
+
+        vec4 clipspace_mouse_xy = vec4(gl_FragCoord.x / u_canvas_size.x, gl_FragCoord.y / u_canvas_size.y, 0.0, 0.0) * u_mouse_xy.x;
+        gl_FragColor = v_color + vec4(cos(clipspace_mouse_xy.x)*cos(clipspace_mouse_xy.y), sin(clipspace_mouse_xy.y), sin(clipspace_mouse_xy.y), 1);
     }
 </script>
 
@@ -79,6 +96,8 @@
     }
 
     var shaderProgram;
+    var fragmentShaderMouseXY;
+    var fragmentShaderCanvasSize;
 
     function initShaders() {
         var fragmentShader = getShader(gl, "shader-fs");
@@ -96,6 +115,11 @@
         gl.useProgram(shaderProgram);
         shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "a_position");
         shaderProgram.vertexColorAttribute = gl.getAttribLocation(shaderProgram, "a_color");
+        fragmentShaderMouseXY = gl.getUniformLocation(shaderProgram, "u_mouse_xy");
+        fragmentShaderCanvasSize = gl.getUniformLocation(shaderProgram, "u_canvas_size");
+
+        gl.uniform2fv(fragmentShaderCanvasSize, [document.body.clientWidth, document.body.clientHeight]);
+
     }
 
     var vertexBuffer;
@@ -172,6 +196,29 @@
     canvas.width = document.body.clientWidth;
     canvas.height = document.body.clientHeight;
 </script>
+
+<script>
+	var isIE = document.all?true:false;
+	if (!isIE) document.captureEvents(Event.MOUSEMOVE);
+	document.onmousemove = getMousePosition;
+	function getMousePosition(mp) {
+	  var _x;
+	  var _y;
+	  if (!isIE) {
+		_x = mp.pageX;
+		_y = mp.pageY;
+	  }
+	  if (isIE) {
+		_x = event.clientX + document.body.scrollLeft;
+		_y = event.clientY + document.body.scrollTop;
+	  }
+
+    gl.uniform2fv(fragmentShaderMouseXY, [_x, _y]);
+
+	  return true;
+	}
+</script>
+
 
 </body>
 </html>
